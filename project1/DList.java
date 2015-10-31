@@ -45,7 +45,7 @@ public class DList{
 		size++;
 	}
 
-	public void insetFront(DListNode node){
+	public void insertFront(DListNode node){
 		node.next = head;
 		head.prev = node;
 		node.prev = null;
@@ -75,14 +75,14 @@ public class DList{
 
 	}
 
-	public void remove(DList node){
+	public void remove(DListNode node){
 		if(node.prev != null)
 			if(node.next != null)
 				removeBetween(node);
 			else
 				removeEnd();
 		else
-			removeFront()
+			removeFront();
 	}
 
 	public DListNode getHead(){
@@ -93,45 +93,90 @@ public class DList{
 		return tail;
 	}
 
-	public void editListBetween(DListNode node, DListNode newNode, int sum, int index){
+	public void editBetween(DListNode node, DListNode newNode, int sum, int index){
 		DListNode nextNode = new DListNode(node.getRed(), node.getGreen(), node.getBlue(), sum - index);
+		nextNode.next = node.next;
 		node.setLength(-1 - sum + index + node.getLength());
-		list.insertBetween(node, nextNode, newNode);
+		newNode.setLength(1);
+		insertBetween(node, nextNode, newNode);
 	}
 
-	public void editListFront(DListNode node, DListNode newNode, int sum, int index){
+	public void editSingle(DListNode node, DListNode newNode){
 		if(node.prev == null){
-			if(node.getLength() != 1){
-				node.deductLength();
-				list.insertFront(newNode);
-			}else{
-				if(node.next != null && node.next.equals(newNode)){
+			if(node.next == null)
+				node.edit(newNode);
+			else{
+				if(node.next.equals(newNode)){
 					node.next.addLength();
-					list.remove(node);
+					remove(node);
 				}else
 					node.edit(newNode);
 			}
 		}else{
-			if(node.getLength() != 1){
+			if(node.next == null){
 				if(node.prev.equals(newNode)){
 					node.prev.addLength();
-					node.deductLength();
+					remove(node);
 				}else{
-					node.deductLength();
-					list.insertBetween(node.prev, node, newNode);
+					node.edit(newNode);
 				}
 			}else{
 				if(node.prev.equals(newNode)){
-					node.prev.addLength();
-					list.remove(node);	
-				}else if(node.next != null && node.next.equals(newNode)){
-					node.next.addLength();
-					list.remove(node);
-				}else
-					node.edit(newNode);
+					if(node.next.equals(newNode)){
+						node.prev.setLength(node.prev.getLength() + 1 + node.next.getLength());
+						remove(node.next);
+						remove(node);
+					}else{
+						node.prev.addLength();
+						remove(node);
+					}
+				}else{
+					if(node.next.equals(newNode)){
+						node.next.addLength();
+						remove(node);
+					}else{
+						node.edit(newNode);
+					}
 				}
 			}
 		}
+	}
+
+
+	public void editFront(DListNode node, DListNode newNode){
+		if(node.prev != null){
+			if(node.prev.equals(newNode)){
+				node.prev.addLength();
+				remove(node);
+			}else{
+				newNode.setLength(1);
+				node.deductLength();
+				insertBetween(node.prev, node, newNode);
+			}
+		}else{
+			newNode.setLength(1);
+			node.deductLength();
+			insertFront(newNode);
+		}
+
+	}
+
+	public void editEnd(DListNode node, DListNode newNode){
+		if(node.next != null){
+			if(node.next.equals(newNode)){
+				node.next.addLength();
+				remove(node);
+			}else{
+				newNode.setLength(1);
+				node.deductLength();
+				insertBetween(node, node.next, newNode);
+			}
+		}else{
+			newNode.setLength(1);
+			node.deductLength();
+			insertEnd(newNode);
+		}
+
 	}
 
 

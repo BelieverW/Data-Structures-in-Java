@@ -1,10 +1,5 @@
 /* RunLengthEncoding.java */
 
-/**
-* Reference:
-*   https://github.com/mDibyo/imageManipulation
-*   https://github.com/mDibyo/imageManipulation/blob/master/DList.java
-*/
 
 /**
  *  The RunLengthEncoding class defines an object that run-length encodes
@@ -269,6 +264,7 @@ public class RunLengthEncoding implements Iterable {
         System.out.println("****Run length less than 1");
         System.out.println("[" + currentRun[1] + " " + currentRun[2] + " " + 
                           currentRun[3] + ", [" +currentRun[0] + "]]");
+        System.out.println(list);
       }
       if(iterator.hasNext()){
         nextRun = iterator.next();
@@ -277,7 +273,8 @@ public class RunLengthEncoding implements Iterable {
           System.out.println("[" + currentRun[1] + " " + currentRun[2] + " " + 
                             currentRun[3] + ", [" +currentRun[0] + "]]"); 
           System.out.println("[" + nextRun[1] + " " + nextRun[2] + " " + 
-                            nextRun[3] + ", [" +nextRun[0] + "]]");                                   
+                            nextRun[3] + ", [" +nextRun[0] + "]]"); 
+          System.out.println(list);                                  
         }
       }
       currentRun = nextRun;
@@ -315,65 +312,25 @@ public class RunLengthEncoding implements Iterable {
     int index = y * width + x + 1;
     int sum = 0;
     
-/*    while(sum < index){
+    while(sum < index){
       sum += currentNode.getLength();
       lastNode = currentNode;
       currentNode = currentNode.next;
     }
+
     if(sum == index){
-      if(currentNode != null){
-        if(lastNode.equals(setNode));
-        else if(lastNode.getLength() > 1){
-          if(currentNode.equals(setNode)){
-            lastNode.deductLength();
-            currentNode.addLength();
-          }else{
-            lastNode.deductLength();
-            setNode.setLength(1);
-            list.insertBetween(lastNode, currentNode, setNode);
-          }
-        }else{
-          if(currentNode.equals(setNode)){
-            list.removeFront();
-            currentNode.addLength();
-          }else
-            lastNode.edit(setNode);
-        }
+      if(lastNode.getLength() == 1){
+        list.editSingle(lastNode, setNode);
+      }else{
+        list.editEnd(lastNode, setNode);
       }
-    }else if(index == (sum + 1) ){
-      if(!(lastNode.equals(setNode))){
-        if(lastNode.prev == null){
-          if(lastNode.getLength() == 1){
-            if(currentNode !== null){
-            if(currentNode.equals(setNode)){
-              list.removeBetween(lastNode);
-              currentNode.addLength();
-            }
-          }else{
-            setNode.setLength(1);
-            list.insetFront(setNode);
-            lastNode.deductLength();
-          }
-        }
-        else{
-          if(lastNode.getLength() == 1){
-            list.removeBetween(lastNode);
-            currentNode.addLength();
-          }else{
-                      setNode.setLength(1);
-          lastNode.deductLength();
-          list.insertBetween(lastNode.prev, lastNode, setNode);
-          }
-        }
-      }
-    }else{
-      if(!(lastNode.equals(setNode))){
-        DListNode nextNode = new DListNode(lastNode.getRed(), lastNode.getGreen(), lastNode.getBlue(), sum - index);
-        lastNode.setLength(sum - index);
-        setNode.setLength(1);
-        list.insertBetween(lastNode, nextNode, setNode);
-      }
-    }*/
+    }else if((index - 1 + lastNode.getLength()) == sum )
+            list.editFront(lastNode, setNode);
+          else
+            list.editBetween(lastNode, setNode, sum, index);
+
+
+
     check();
   }
 
@@ -455,7 +412,7 @@ public class RunLengthEncoding implements Iterable {
                        "on a 3x3 image.  Input image:");
     System.out.print(image1);
     RunLengthEncoding rle1 = new RunLengthEncoding(image1);
-    System.out.println(rle1);
+    //System.out.println(rle1);
     rle1.check();
     System.out.println("Testing getWidth/getHeight on a 3x3 encoding.");
     doTest(rle1.getWidth() == 3 && rle1.getHeight() == 3,
@@ -553,7 +510,7 @@ public class RunLengthEncoding implements Iterable {
                        "on a 5x2 image.  Input image:");
     System.out.print(image3);
     RunLengthEncoding rle3 = new RunLengthEncoding(image3);
-    System.out.println(rle3);
+    //System.out.println(rle3);
     rle3.check();
     System.out.println("Testing getWidth/getHeight on a 5x2 encoding.");
     doTest(rle3.getWidth() == 5 && rle3.getHeight() == 2,
@@ -590,6 +547,7 @@ public class RunLengthEncoding implements Iterable {
                        "on a 3x2 image.  Input image:");
     System.out.print(image4);
     RunLengthEncoding rle4 = new RunLengthEncoding(image4);
+    System.out.println(rle4);
     rle4.check();
     System.out.println("Testing getWidth/getHeight on a 3x2 encoding.");
     doTest(rle4.getWidth() == 3 && rle4.getHeight() == 2,
