@@ -167,11 +167,11 @@ public class BinaryTree implements Dictionary {
       if (node.parent == null) {
         // the node is a root node
         if (node.leftChild == null && node.rightChild != null) {
-          // the node only has right child
+          // the node has only a right child
           root = node.rightChild;
           
         } else if (node.rightChild == null && node.leftChild != null) {
-          // the node only has left child
+          // the node has only a left child
           root = node.leftChild;
           
         } else if (node.leftChild == null && node.rightChild == null){
@@ -195,7 +195,7 @@ public class BinaryTree implements Dictionary {
       } else {
         int comp = ((Comparable) node.entry.key()).compareTo(node.parent.entry.key());
         if (node.leftChild == null && node.rightChild != null) {
-          // the node only has right child
+          // the node has only a right child
           if (comp <= 0) {
             // node is its parent's left Child
             node.parent.leftChild = node.rightChild;
@@ -206,7 +206,7 @@ public class BinaryTree implements Dictionary {
 
           }
         } else if (node.rightChild == null && node.leftChild != null) {
-          // the node only has left child
+          // the node has only a left child
           if (comp <= 0) {
             // node is its parent's left Child
             node.parent.leftChild = node.leftChild;
@@ -244,6 +244,15 @@ public class BinaryTree implements Dictionary {
       return entry;
     }
   }
+
+  /** 
+   *  This method is a self-defined method.
+   *  findMin() searches for a node with the minimum key in a Binary Tree.  If 
+   *  such a node is found, return it; otherwise, it returns null. 
+   *
+   *  @param node the BinaryTreeNode.  
+   *  @return a node with the minimun key in a Binary Tree whose root is node.
+   **/
 
   public BinaryTreeNode findMin(BinaryTreeNode node){
     if (node == null) {
