@@ -1,0 +1,2 @@
+INDEX VERSION 1.127+/Users/Daniel_RICE/Desktop/CS/UCB_CS61B_HW/hw8/.metadata/.plugins/org.eclipse.jdt.core
+3618483523.index
