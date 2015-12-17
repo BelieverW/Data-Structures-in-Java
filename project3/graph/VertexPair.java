@@ -10,7 +10,7 @@ package graph;
  * (v, u).
  */
 
-class VertexPair {
+public class VertexPair {
   protected Object object1;
   protected Object object2;
 
