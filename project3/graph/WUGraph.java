@@ -331,8 +331,4 @@ public class WUGraph {
     return weight;
   }
 
-  public DList edges() {
-    return edgeList;
-  }
-
 }
