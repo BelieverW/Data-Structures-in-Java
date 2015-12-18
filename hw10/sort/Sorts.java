@@ -26,7 +26,37 @@ public class Sorts {
    **/
   public static int[] countingSort(int[] keys, int whichDigit) {
     // Replace the following line with your solution.
-    return null;
+    int[] temp = new int[keys.length];
+    int[] result = new int[keys.length];
+    int[] count = new int[16];
+
+    for (int i = 0; i < count.length; i++) {
+      count[i] = 0;
+    }
+
+    for (int i = 0; i < keys.length; i++) {
+      temp[i] = keys[i];
+    }
+
+    for (int i = 0; i < temp.length; i++) {
+      for (int j = 0; j < whichDigit; j++) {
+        temp[i] = temp[i] / 16;
+      }
+      temp[i] = temp[i] & 15;
+      count[temp[i]]++;
+    }
+    int total = 0;
+    int tempInt;
+    for (int i = 0; i < count.length; i++) {
+      tempInt = count[i];
+      count[i] = total;
+      total += tempInt;
+    }
+    for (int i = 0; i < temp.length; i++) {
+      result[count[temp[i]]] = keys[i];
+      count[temp[i]]++;
+    }
+    return result;
   }
 
   /**
@@ -40,7 +70,17 @@ public class Sorts {
    **/
   public static int[] radixSort(int[] keys) {
     // Replace the following line with your solution.
-    return null;
+    int[] result = new int[keys.length];
+    int[] temp = new int[keys.length];
+
+    for (int i = 0; i < keys.length; i++) {
+      temp[i] = keys[i];
+    }
+    for (int i = 0; i < 8; i++) {
+      temp = countingSort(temp, i);
+    }
+    result = temp;
+    return result;
   }
 
   /**
@@ -48,10 +88,10 @@ public class Sorts {
    *  (base 16).
    *  @param key is an array of ints.
    **/
-  public static void yell(int[] keys) {
+  public static void yell(int[] keys, int num) {
     System.out.print("keys are [ ");
     for (int i = 0; i < keys.length; i++) {
-      System.out.print(Integer.toString(keys[i], 16) + " ");
+      System.out.print(Integer.toString(keys[i], num) + " ");
     }
     System.out.println("]");
   }
@@ -81,10 +121,18 @@ public class Sorts {
                    Integer.parseInt("3bba7387", 16),
                    Integer.parseInt("52953fdb", 16),
                    Integer.parseInt("40013879", 16) };
-
-    yell(keys);
+    
+    System.out.println("---------Base-16-----------");
+    yell(keys, 16);
+    System.out.println("---------Base-10-----------");
+    yell(keys, 10);
+    /*keys = countingSort(keys, 2);
+    yell(keys);*/
     keys = radixSort(keys);
-    yell(keys);
+    System.out.println("---------Base-16-----------");
+    yell(keys, 16);
+    System.out.println("---------Base-10-----------");
+    yell(keys, 10);
   }
 
 }
