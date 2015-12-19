@@ -345,6 +345,7 @@ public class SplayTree implements Dictionary {
       } else {
         BinaryTreeNode parent = node.parent;
         BinaryTreeNode returnNode = node;
+        size--;
 
         if (node.leftChild == null && node.rightChild == null) {
           if (node == parent.leftChild) {
