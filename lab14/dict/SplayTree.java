@@ -178,6 +178,13 @@ public class SplayTree implements Dictionary {
    **/
   private void zigZig(BinaryTreeNode node) {
     // Write your solution to Part I of the lab here.
+    if (node == node.parent.leftChild) {
+      rotateRight(node.parent);
+      rotateRight(node);
+    } else {
+      rotateLeft(node.parent);
+      rotateLeft(node);
+    }
   }
 
   /**
@@ -190,7 +197,15 @@ public class SplayTree implements Dictionary {
     // When you do Part II of the lab, please replace the following faulty code
     // with your solution.
     while (node.parent != null) {
-      zig(node);
+      if (node.parent.parent == null) {
+        zig(node);
+      } else if ((node == node.parent.leftChild && node.parent == node.parent.parent.leftChild)
+                || node == node.parent.rightChild && node.parent == node.parent.parent.rightChild) {
+        zigZig(node);
+      } else {
+        zigZag(node);
+      }
+
     }
     // The following line isn't really necessary, as the rotations update the
     // root correctly if splayNode() successfully splays "node" to the root,
@@ -312,7 +327,69 @@ public class SplayTree implements Dictionary {
    **/
   public Entry remove(Object key) {
     //  Not implemented.
-    return null;
+    if (root == null) {
+      return null;
+    } else {
+     return removeHelper(root, key);
+    }
+  }
+
+  public Entry removeHelper(BinaryTreeNode node, Object key) {
+    if (node == null) {
+      return null; // can't find node containing key
+    } else {
+      if (((Comparable) node.entry.key()).compareTo(key) > 0) {
+        return removeHelper(node.leftChild, key);
+      } else if (((Comparable) node.entry.key()).compareTo(key) < 0) {
+        return removeHelper(node.rightChild, key);
+      } else {
+        BinaryTreeNode parent = node.parent;
+        BinaryTreeNode returnNode = node;
+
+        if (node.leftChild == null && node.rightChild == null) {
+          if (node == parent.leftChild) {
+            parent.leftChild = null;
+          } else {
+            parent.rightChild = null;
+          }
+          splayNode(parent);
+        } else if (node.leftChild != null && node.rightChild == null) {
+          node.leftChild.parent = parent;
+          if (node == parent.leftChild) {
+            parent.leftChild = node.leftChild;
+          } else {
+            parent.rightChild = node.leftChild;
+          }
+          splayNode(parent);
+        } else if (node.leftChild == null && node.rightChild != null) {
+          node.rightChild.parent = parent;
+          if (node == parent.leftChild) {
+            parent.leftChild = node.rightChild;
+          } else {
+            parent.rightChild = node.rightChild;
+          }
+          splayNode(parent);
+        } else {
+          BinaryTreeNode removedNode = node.rightChild;
+          BinaryTreeNode removedNodeParent = removedNode;
+
+          while (removedNode != null) {
+            removedNodeParent = removedNode;
+            removedNode = removedNode.leftChild;
+          }
+          removedNode = removedNodeParent;
+          removedNodeParent = removedNode.parent;
+          node.entry = new Entry(removedNode.entry.key(), removedNode.entry.value());
+          if (removedNode == removedNodeParent.leftChild) {
+            removedNodeParent.leftChild = null;
+          } else {
+            removedNodeParent.rightChild = null;
+          }
+          splayNode(removedNodeParent);
+        }
+        return returnNode.entry; 
+      }
+    }
   }
 
   /**
@@ -425,14 +502,22 @@ public class SplayTree implements Dictionary {
     if (!tree2.toString().equals(shouldBe)) {
       System.out.println("  ERROR:  SHOULD BE " + shouldBe);
     }
-    // tree2.testRemove(2, "(1F(3A((4C)7B)))9E");
-    // tree2.testRemove(4, "((1F)3A)7B(9E)");
-    // tree2.testFind(1, "F");
-    // tree2.testFind(9, "E");
-    // shouldBe = "(1F((3A)7B))9E";
-    // if (!tree2.toString().equals(shouldBe)) {
-    //   System.out.println("  ERROR:  SHOULD BE " + shouldBe);
-    // }
+    tree2.testRemove(2, "(1F(3A((4C)7B)))9E");
+    tree2.testRemove(4, "((1F)3A)7B(9E)");
+    tree2.testFind(1, "F");
+    tree2.testFind(9, "E");
+    shouldBe = "(1F((3A)7B))9E";
+    if (!tree2.toString().equals(shouldBe)) {
+      System.out.println("  ERROR:  SHOULD BE " + shouldBe);
+    }
+
+    tree2 = new SplayTree();
+    tree2.insert(new Integer(3), "A");
+    tree2.insert(new Integer(7), "B");
+    tree2.insert(new Integer(4), "C");
+    tree2.insert(new Integer(2), "D");
+    tree2.insert(new Integer(9), "E");
+    tree2.insert(new Integer(1), "F");
     tree2.testFind(7, "B");
     System.out.println("Tree 2 is:  " + tree2);
     shouldBe = "(1F((2D)3A(4C)))7B(9E)";
